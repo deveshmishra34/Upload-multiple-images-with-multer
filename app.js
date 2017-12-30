@@ -1,9 +1,14 @@
 const express = require("express");
 const mysql = require("mysql");
 const multer = require("multer");
+const bodyParser = require("body-parser");
+
 
 const app = express();
 app.use(express.static("public"));
+// app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ urlencoded : true }));
+
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS");
@@ -41,17 +46,8 @@ app.get("/", (req, res) => {
 
 app.post("/feedback", (req, res) => {
     console.log(req.body);
-
-    let data = {
-        name: "sdsd",
-        email: "sdsd",
-        subject: "sdsd",
-        type: "ss",
-        rating: "sdsd",
-        description: "sdsdsd",
-    }
     let sql = "INSERT INTO feedback SET ?";
-    let query = db.query(sql, data, (err, result) => {
+    let query = db.query(sql, req.body, (err, result) => {
         if (err) throw err;
         res.json(result);
     });
